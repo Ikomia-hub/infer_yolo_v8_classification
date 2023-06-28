@@ -31,7 +31,7 @@ class InferYoloV8ClassificationParam(core.CWorkflowTaskParam):
 
     def __init__(self):
         core.CWorkflowTaskParam.__init__(self)
-        self.model_name = "yolov8m"
+        self.model_name = "yolov8m-cls"
         self.cuda = torch.cuda.is_available()
         self.input_size = 640
         self.conf_thres = 0.25
@@ -42,7 +42,6 @@ class InferYoloV8ClassificationParam(core.CWorkflowTaskParam):
                             'models',
                             'imagenet_classes.txt'
         )
-
 
     def set_values(self, param_map):
         # Set parameters values from Ikomia application
