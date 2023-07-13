@@ -38,9 +38,9 @@ class InferYoloV8ClassificationParam(core.CWorkflowTaskParam):
         self.update = False
         self.model_weight_file = ""
         self.class_file = os.path.join(
-                            os.path.dirname(os.path.realpath(__file__)),
-                            'models',
-                            'imagenet_classes.txt'
+            os.path.dirname(os.path.realpath(__file__)),
+            'models',
+            'imagenet_classes.txt'
         )
 
     def set_values(self, param_map):
@@ -108,7 +108,8 @@ class InferYoloV8Classification(dataprocess.CClassificationTask):
 
         # Load model
         if param.update or self.model is None:
-            self.device = 1 if param.cuda else torch.device("cpu")
+            self.device = torch.device(
+                "cuda") if param.cuda else torch.device("cpu")
             self.half = True if param.cuda else False
             self.read_class_names(param.class_file)
 
