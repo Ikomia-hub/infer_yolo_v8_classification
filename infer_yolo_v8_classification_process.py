@@ -21,6 +21,7 @@ from ikomia import core, dataprocess, utils
 from ultralytics import YOLO
 import torch
 import os
+from ultralytics import download
 
 
 # --------------------
@@ -87,6 +88,8 @@ class InferYoloV8Classification(dataprocess.CClassificationTask):
         self.model = None
         self.half = False
         self.model_name = None
+        self.repo = 'ultralytics/assets'
+        self.version = 'v0.0.0'
 
     def get_progress_steps(self):
         # Function returning the number of progress steps for this process
@@ -111,12 +114,20 @@ class InferYoloV8Classification(dataprocess.CClassificationTask):
             self.device = torch.device(
                 "cuda") if param.cuda else torch.device("cpu")
             self.half = True if param.cuda else False
-            self.read_class_names(param.class_file)
 
             if param.model_weight_file:
                 self.model = YOLO(param.model_weight_file)
             else:
-                self.model = YOLO(f'{param.model_name}.pt')
+                # Set path
+                model_folder = os.path.join(os.path.dirname(
+                    os.path.realpath(__file__)), "weights")
+                model_weights = os.path.join(
+                    str(model_folder), f'{param.model_name}.pt')
+                # Download model if not exist
+                if not os.path.isfile(model_weights):
+                    url = f'https://github.com/{self.repo}/releases/download/{self.version}/{param.model_name}.pt'
+                    download(url=url, dir=model_folder, unzip=True)
+                self.model = YOLO(model_weights)
             param.update = False
 
         # Inference on whole image
@@ -184,7 +195,7 @@ class InferYoloV8ClassificationFactory(dataprocess.CTaskFactory):
                                 "with YOLOv8 models"
         # relative path -> as displayed in Ikomia application process tree
         self.info.path = "Plugins/Python/Classification"
-        self.info.version = "1.0.0"
+        self.info.version = "1.0.1"
         self.info.icon_path = "icons/icon.png"
         self.info.authors = "Jocher, G., Chaurasia, A., & Qiu, J"
         self.info.article = "YOLO by Ultralytics"
