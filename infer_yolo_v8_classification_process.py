@@ -50,7 +50,6 @@ class InferYoloV8ClassificationParam(core.CWorkflowTaskParam):
         self.cuda = utils.strtobool(param_map["cuda"])
         self.input_size = int(param_map["input_size"])
         self.conf_thres = float(param_map["conf_thres"])
-        self.iou_thres = float(param_map["iou_thres"])
         self.model_weight_file = str(param_map["model_weight_file"])
         self.class_file = param_map["class_file"]
         self.update = True
