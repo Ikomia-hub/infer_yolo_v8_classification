@@ -190,8 +190,6 @@ class InferYoloV8ClassificationFactory(dataprocess.CTaskFactory):
         dataprocess.CTaskFactory.__init__(self)
         self.info.name = "infer_yolo_v8_classification"
         self.info.short_description = "Inference with YOLOv8 image classification models"
-        self.info.description = "This algorithm proposes inference for image classification " \
-                                "with YOLOv8 models"
         # relative path -> as displayed in Ikomia application process tree
         self.info.path = "Plugins/Python/Classification"
         self.info.version = "1.0.1"
@@ -207,6 +205,8 @@ class InferYoloV8ClassificationFactory(dataprocess.CTaskFactory):
         self.info.repository = "https://github.com/ultralytics/ultralytics"
         # Keywords used for search
         self.info.keywords = "YOLO, classification, ultralytics, coco"
+        self.info.algo_type = core.AlgoType.INFER
+        self.info.algo_tasks = "CLASSIFICATION"
 
     def create(self, param=None):
         # Create process object
