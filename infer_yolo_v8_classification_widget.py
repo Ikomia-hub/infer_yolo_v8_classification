@@ -101,17 +101,6 @@ class InferYoloV8ClassificationWidget(core.CWorkflowTaskWidget):
                                             self.parameters.input_size
         )
 
-        # Confidence threshold
-        self.spin_conf_thres = pyqtutils.append_double_spin(
-            self.grid_layout,
-            "Confidence threshold",
-            self.parameters.conf_thres,
-            min=0.,
-            max=1.,
-            step=0.01,
-            decimals=2
-        )
-
         # PyQt -> Qt wrapping
         layout_ptr = qtconversion.PyQtToQt(self.grid_layout)
 
@@ -131,7 +120,6 @@ class InferYoloV8ClassificationWidget(core.CWorkflowTaskWidget):
         self.parameters.model_name = self.combo_model.currentText()
         self.parameters.cuda = self.check_cuda.isChecked()
         self.parameters.input_size = self.spin_input_size.value()
-        self.parameters.conf_thres = self.spin_conf_thres.value()
         if self.check_cfg.isChecked():
             self.parameters.model_weight_file = self.browse_weight_file.path
             self.parameters.class_file = self.browse_class_file.path

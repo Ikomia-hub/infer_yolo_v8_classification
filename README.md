@@ -70,7 +70,6 @@ Ikomia Studio offers a friendly UI with the same features as the API.
     - yolov8x-cls
 
 - **input_size** (int) - default '640': Size of the input image.
-- **conf_thres** (float) default '0.25': Box threshold for the prediction [0,1].
 - **cuda** (bool): If True, CUDA-based inference (GPU). If False, run on CPU.
 - **model_weight_file** (str, *optional*): Path to model weights file .pt. 
 
@@ -86,7 +85,6 @@ algo = wf.add_task(name="infer_yolo_v8_classification", auto_connect=True)
 
 algo.set_parameters({
     "model_name": "yolov8m-cls",
-    "conf_thres": "0.5",
     "input_size": "640",
     "cuda": "True"
 })
