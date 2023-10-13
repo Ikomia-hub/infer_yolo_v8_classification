@@ -79,21 +79,6 @@ class InferYoloV8ClassificationWidget(core.CWorkflowTaskWidget):
         self.label_hyp.setVisible(custom_weight)
         self.browse_weight_file.setVisible(custom_weight)
 
-
-        # Classes file
-        self.label_classes = QLabel("Classes file (.txt)")
-        self.browse_class_file = pyqtutils.BrowseFileWidget(
-                                        path=self.parameters.class_file,
-                                        tooltip="Select file",
-                                        mode=QFileDialog.ExistingFile
-        )
-        row = self.grid_layout.rowCount()
-        self.grid_layout.addWidget(self.label_classes, row, 0)
-        self.grid_layout.addWidget(self.browse_class_file, row, 1)
-
-        self.label_classes.setVisible(custom_weight)
-        self.browse_class_file.setVisible(custom_weight)
-
         # Input size
         self.spin_input_size = pyqtutils.append_spin(
                                             self.grid_layout,
@@ -113,7 +98,6 @@ class InferYoloV8ClassificationWidget(core.CWorkflowTaskWidget):
         self.browse_weight_file.setVisible(self.check_cfg.isChecked())
 
         self.label_classes.setVisible(self.check_cfg.isChecked())
-        self.browse_class_file.setVisible(self.check_cfg.isChecked())
 
     def on_apply(self):
         # Apply button clicked slot
@@ -122,7 +106,6 @@ class InferYoloV8ClassificationWidget(core.CWorkflowTaskWidget):
         self.parameters.input_size = self.spin_input_size.value()
         if self.check_cfg.isChecked():
             self.parameters.model_weight_file = self.browse_weight_file.path
-            self.parameters.class_file = self.browse_class_file.path
         self.parameters.update = True
 
         # Send signal to launch the process

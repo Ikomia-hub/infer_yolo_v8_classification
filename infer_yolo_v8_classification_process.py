@@ -35,23 +35,15 @@ class InferYoloV8ClassificationParam(core.CWorkflowTaskParam):
         self.model_name = "yolov8m-cls"
         self.cuda = torch.cuda.is_available()
         self.input_size = 640
-        self.conf_thres = 0.25
         self.update = False
         self.model_weight_file = ""
-        self.class_file = os.path.join(
-            os.path.dirname(os.path.realpath(__file__)),
-            'models',
-            'imagenet_classes.txt'
-        )
 
     def set_values(self, param_map):
         # Set parameters values from Ikomia application
         self.model_name = str(param_map["model_name"])
         self.cuda = utils.strtobool(param_map["cuda"])
         self.input_size = int(param_map["input_size"])
-        self.conf_thres = float(param_map["conf_thres"])
         self.model_weight_file = str(param_map["model_weight_file"])
-        self.class_file = param_map["class_file"]
         self.update = True
 
     def get_values(self):
@@ -61,10 +53,8 @@ class InferYoloV8ClassificationParam(core.CWorkflowTaskParam):
         param_map["model_name"] = str(self.model_name)
         param_map["cuda"] = str(self.cuda)
         param_map["input_size"] = str(self.input_size)
-        param_map["conf_thres"] = str(self.conf_thres)
         param_map["update"] = str(self.update)
         param_map["model_weight_file"] = str(self.model_weight_file)
-        param_map["class_file"] = str(self.class_file)
         return param_map
 
 
@@ -136,7 +126,6 @@ class InferYoloV8Classification(dataprocess.CClassificationTask):
                 src_image,
                 save=False,
                 imgsz=param.input_size,
-                conf=param.conf_thres,
                 half=self.half,
                 device=self.device
             )
@@ -163,7 +152,6 @@ class InferYoloV8Classification(dataprocess.CClassificationTask):
                     roi_img,
                     save=False,
                     imgsz=param.input_size,
-                    conf=param.conf_thres,
                     half=self.half,
                     device=self.device
                 )
