@@ -117,6 +117,8 @@ class InferYoloV8Classification(dataprocess.CClassificationTask):
                     url = f'https://github.com/{self.repo}/releases/download/{self.version}/{param.model_name}.pt'
                     download(url=url, dir=model_folder, unzip=True)
                 self.model = YOLO(model_weights)
+            categories = list(self.model.names.values())
+            self.set_names(categories)
             param.update = False
 
         # Inference on whole image
@@ -133,12 +135,17 @@ class InferYoloV8Classification(dataprocess.CClassificationTask):
             # Get result output (classes, confidences)
             classes_names = results[0].names
             probs = results[0].probs
-            classes_idx = probs.top1
-            classe_name = [classes_names[classes_idx]]
-            confidence = probs.top1conf.detach().cpu().numpy()
+            classes_idx = probs.top5
 
-            # Display results in Ikomia application
-            self.set_whole_image_results(classe_name, [str(confidence)])
+            # Map each index to the class name
+            t5_class_names = [classes_names[idx] for idx in classes_idx]
+            t5_confidences = probs.top5conf.detach().cpu().numpy()
+
+            # Convert each conf to str
+            confidence_str = [str(conf) for conf in t5_confidences]
+
+            # Display results
+            self.set_whole_image_results(t5_class_names, confidence_str)
 
         # Inference on ROIs
         else:
@@ -180,7 +187,7 @@ class InferYoloV8ClassificationFactory(dataprocess.CTaskFactory):
         self.info.short_description = "Inference with YOLOv8 image classification models"
         # relative path -> as displayed in Ikomia application process tree
         self.info.path = "Plugins/Python/Classification"
-        self.info.version = "1.0.4"
+        self.info.version = "1.1.0"
         self.info.icon_path = "icons/icon.png"
         self.info.authors = "Jocher, G., Chaurasia, A., & Qiu, J"
         self.info.article = "YOLO by Ultralytics"
